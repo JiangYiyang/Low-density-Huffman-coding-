@@ -132,12 +132,13 @@ total_typenum/total_type %验证
 for i = 1:col_Type
     HX = HX-Type(row_Type+1,i)*Type(row_Type+3,i)/(total_typenum)*log2(Type(row_Type+3,i)/(total_typenum));
 end
-% 算得HX = 3.8754
+
 alphabet = [];
 for i = 1:sum(Type(row_Type+1,1:col_Type))
     str = ['a' num2str(i)];
     alphabet = [alphabet,{str}];
 end
+
 prob = [];
 for i = 1:col_Type
     for j = 1:Type(row_Type+1,i)
@@ -154,4 +155,3 @@ for i = 1:length(dict.code)
 %     end
 end
 EX = sum(dict.codelength.*prob);
-% 算得EX = 3.9273
