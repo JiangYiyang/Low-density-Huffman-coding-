@@ -86,7 +86,7 @@ Type = [0,0,0,1,0;1,0,1,0,0;0,2,0,0,0;2,1,0,0,0;4,0,0,0,0];
 [row_Type,col_Type] = size(Type);
 
 % 各个组对应情况数
-% 比如31bit 有2个1，那就有combntns(31,2)个情况
+% 比如64bit 有2个1，那就有combntns(64,2)个情况
 for i = 1:col_Type-1
     Type(row_Type+1,i) = combntns(bitnum,i);
 end
@@ -96,7 +96,7 @@ Type(row_Type+1,col_Type) = 1;
 Type(1:row_Type,col_Type) = ones(row_Type,1)*num1-sum(Type(1:row_Type,1:(col_Type-1))')';
 
 
-% 对应不同的方案（不同种类组最后组成1023bit 有9个1的信息）各种组又有多少种情况
+% 对应不同的方案（不同种类组最后组成512bit 有4个1的信息）各种组又有多少种情况
 Type(1:row_Type,col_Type+1) = 1;
 for i = 1:row_Type
     Type(1:row_Type,col_Type+1) = Type(1:row_Type,col_Type+1) .* (Type(row_Type+1,i).^Type(1:row_Type,i));
@@ -116,17 +116,17 @@ end
 % 计算这种方案总数
 Type(:,col_Type+3) = Type(:,col_Type+2).*Type(:,col_Type+1);
 
-% 这个是指总共有多少种1023bit的信息
+% 这个是指总共有多少种512bit的信息
 total_type = sum(Type(:,col_Type+3));
 % 基于所有情况，各个类型的组的数量
 for i = 1:col_Type
     Type(row_Type+2,i) = sum(Type(1:row_Type,i).*Type(1:row_Type,col_Type+3));
 end
-% 由于比如31bit 1个1有31中情况，Type(33,i)算的是总数，要除以类型数
+% 由于比如64bit 1个1有64中情况，Type(row_Type+2,1:col_Type) 算的是总数，要除以类型数Type(row_Type+1,1:col_Type)
 Type(row_Type+3,1:col_Type) = Type(row_Type+2,1:col_Type)./Type(row_Type+1,1:col_Type);
 % 熵计算
 HX = 0;
-% 这个是指所有情况下，各个31bit分段出现的总数，应为total_type的33倍(一段有33组)
+% 这个是指所有情况下，各个31bit分段出现的总数，应为total_type的4倍(一段有4组)
 total_typenum = sum(Type(row_Type+2,1:col_Type));
 total_typenum/total_type %验证
 for i = 1:col_Type
